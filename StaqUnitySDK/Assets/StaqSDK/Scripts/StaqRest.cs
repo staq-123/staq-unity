@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections;
 
 public class StaqRest {
@@ -9,6 +10,8 @@ public class StaqRest {
 	}
 	
 	string gameId;
+	string uid;
+	string authToken;
 	MonoBehaviour behaviour;
 	
 	static float postIntervalSeconds = .5F;
@@ -17,13 +20,16 @@ public class StaqRest {
 	{
 		while (true) // TODO: check whether we should keep posting events
 		{
-			// check if we are already submitting data
-			// while (submittind) yeld new WaitForSeconds(.5);
+			// if offline log to storage
+			
+			// if not authenticated do auth
+			if (uid == null || authToken == null)
+				yield return behaviour.StartCoroutine(Auth("testapp1", "teeeeeest!!!")); // TODO: pass the right appId and UDID
 			
 			Debug.Log("Posting data...");
 			
 			// submit data
-			yield return behaviour.StartCoroutine(StartDataSubmit());
+			//yield return behaviour.StartCoroutine(StartDataSubmit());
 			
 			// wait timer
 			yield return new WaitForSeconds(postIntervalSeconds);
@@ -34,18 +40,38 @@ public class StaqRest {
 	{
 		Debug.Log("Begin submit.");
 		
-		yield return behaviour.StartCoroutine(Auth("", null));
+		// TODO: submit the queue to the server
 		
 		Debug.Log("Done submit.");
 		yield return null;
 	}
 	
-	IEnumerator Auth(string udid, string[] token)
+	IEnumerator Auth(string appId, string udid)
 	{
-		var www = new WWW("http://staqapi.cloudapp.net/");
-		
+		var www = new WWW(FormatStaqUrl(appId) + "auth/device/" + udid);
 		yield return www;
+	
+		var parsedResponse = StaqLitJson.JsonMapper.ToObject(www.text);
 		
-		var content = www.text;
+		uid = (string)parsedResponse["uid"];
+		authToken = (string)parsedResponse["authtoken"];
+		Debug.Log("Count: " + parsedResponse.Count);
+	}
+	
+	static string FormatStaqUrl(string appId)
+	{
+		return FormatStaqUrl(appId, null);
+	}
+	
+	static string FormatStaqUrl(string appId, string userId)
+	{
+		string staqBaseUrl = "http://staqapi.cloudapp.net/v1/";
+		
+		if (userId != null)
+			return string.Format("{0}apps/{1}/users/{2}/", staqBaseUrl, appId, userId);
+		
+		return string.Format("{0}apps/{1}/", staqBaseUrl, appId);
 	}
 }
+
+

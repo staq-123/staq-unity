@@ -1,9 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
-public class Staq : MonoBehaviour {
-
-	
+public class Staq : MonoBehaviour
+{
 	// Update is called once per frame
 	void Update () {
 	

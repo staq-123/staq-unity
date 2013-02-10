@@ -3,10 +3,9 @@
   <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\Staq.cs" line="5" />
-      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\Staq.cs" line="96" />
-      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\StaqRest.cs" line="37" />
-      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\StaqRest.cs" line="39" />
+      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\Staq.cs" line="95" />
+      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\StaqRest.cs" line="35" />
+      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\StaqRest.cs" line="29" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
