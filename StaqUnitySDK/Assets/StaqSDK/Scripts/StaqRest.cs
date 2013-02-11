@@ -26,7 +26,7 @@ public class StaqRest {
 			if (uid == null || authToken == null)
 				yield return behaviour.StartCoroutine(Auth("testapp1", "teeeeeest!!!")); // TODO: pass the right appId and UDID
 			
-			Debug.Log("Posting data...");
+			StaqUtilities.Log("Posting data...");
 			
 			// submit data
 			//yield return behaviour.StartCoroutine(StartDataSubmit());
@@ -38,11 +38,11 @@ public class StaqRest {
 	
 	IEnumerator StartDataSubmit()
 	{
-		Debug.Log("Begin submit.");
+		StaqUtilities.Log("Begin submit.");
 		
 		// TODO: submit the queue to the server
 		
-		Debug.Log("Done submit.");
+		StaqUtilities.Log("Done submit.");
 		yield return null;
 	}
 	
@@ -55,7 +55,7 @@ public class StaqRest {
 		
 		uid = (string)parsedResponse["uid"];
 		authToken = (string)parsedResponse["authtoken"];
-		Debug.Log("Count: " + parsedResponse.Count);
+		StaqUtilities.Log("Count: " + parsedResponse.Count);
 	}
 	
 	static string FormatStaqUrl(string appId)
