@@ -95,6 +95,11 @@ public class Staq : MonoBehaviour
 		}
 	}
 	
+	public static bool VerifyReceipt(string receipt)
+	{
+		return defaultInstance.staqRestClient.VerifyReceipt(receipt);
+	}
+	
 	/// <summary>
 	/// Checks whether staq.io is reachable
 	/// </summary>

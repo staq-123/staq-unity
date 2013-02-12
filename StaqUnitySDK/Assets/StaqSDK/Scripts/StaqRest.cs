@@ -58,6 +58,24 @@ public class StaqRest {
 		StaqUtilities.Log("Count: " + parsedResponse.Count);
 	}
 	
+	public bool VerifyReceipt(string receipt)
+	{
+		var www = new WWW("http://domainsbot.com");
+		
+		while (!www.isDone)
+		{
+			behaviour.StartCoroutine(Sleep(200));
+			Debug.Log("Not too often!");
+		}
+		
+		return true;
+	}
+	
+	static IEnumerator Sleep(long milliseconds)
+	{
+		yield return new WaitForSeconds(milliseconds / 1000);
+	}
+	
 	static string FormatStaqUrl(string appId)
 	{
 		return FormatStaqUrl(appId, null);
