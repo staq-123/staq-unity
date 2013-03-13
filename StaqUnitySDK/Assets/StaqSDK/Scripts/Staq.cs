@@ -3,6 +3,11 @@ using System.Collections;
 
 public class Staq : MonoBehaviour
 {
+	static Staq()
+	{
+		Debug.Log("Test!");
+	}
+	
 	// Update is called once per frame
 	void Update () {
 	
@@ -13,14 +18,12 @@ public class Staq : MonoBehaviour
 	/// </summary>
 	static Staq defaultInstance;
 	
-	public string GameId = "game id";
+	public string GameId = "app_uqtmpfcbys";
 	public bool Connected = false;
+	public bool EnforceIapOnError = false;
 	
 	StaqRest staqRestClient = null;
 	
-	/// <summary>
-	/// Setup this component
-	/// </summary>
 	public void Awake ()
 	{
 		//make sure we only have one object with this Staq script at any time
@@ -44,13 +47,10 @@ public class Staq : MonoBehaviour
 		//gameObject.AddComponent<StaqGui>();
 	}
 	
-	/// <summary>
-	/// Initialization
-	/// </summary>
 	void Start () {
 		// TODO: Application.RegisterLogCallback(StaqDebug.HandleLog);
 		
-		Connected = IsConnected();
+		Connected = StaqUtilities.IsConnected();
 		
 		/*if (DebugMode)
 		{
@@ -71,7 +71,7 @@ public class Staq : MonoBehaviour
 			}
 		}*/
 	
-		staqRestClient = new StaqRest(GameId, this);
+		staqRestClient = new StaqRest(GameId, StaqDeviceInfo.CreateUid(), this);
 		StartCoroutine(staqRestClient.StartPosting());
 		
 		//Start the submit queue for sending messages to the server
@@ -85,6 +85,13 @@ public class Staq : MonoBehaviour
 		}*/
 	}
 	
+    void OnApplicationQuit()
+    {
+
+        // app quits
+
+    }
+	
 	public static void OverrideUserId(string userId)
 	{
 		if (!string.IsNullOrEmpty(userId))
@@ -95,41 +102,18 @@ public class Staq : MonoBehaviour
 		}
 	}
 	
-	public static bool VerifyReceipt(string receipt)
+	public static void Iap(string platform, string receipt, string itemId, double price)
 	{
-		return defaultInstance.staqRestClient.VerifyReceipt(receipt);
+		defaultInstance.staqRestClient.AppendIap(platform, receipt, itemId, price);
 	}
 	
-	/// <summary>
-	/// Checks whether staq.io is reachable
-	/// </summary>
-	public static bool IsConnected()
+	public static void SessionStart()
 	{
-		#if UNITY_STANDALONE_OSX || UNITY_STANDALONE_WIN
-		
-		try
-		{
-			System.Net.Sockets.TcpClient clnt = new System.Net.Sockets.TcpClient("staq.io", 80);
-			clnt.Close();
-			return true;
-		}
-		catch(System.Exception)
-		{
-			return false;
-		}
-		
-		#else
-		
-		if  (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork || 
-			(Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork && ALLOWROAMING))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-		
-		#endif
+		defaultInstance.staqRestClient.AppendSessionStart();
+	}
+	
+	public static void SessionEnd()
+	{
+		defaultInstance.staqRestClient.AppendSessionEnd();
 	}
 }
