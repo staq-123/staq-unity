@@ -2,26 +2,11 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\StaqSDK\Scripts\Staq.cs">
     <Files>
-      <File FileName="Assets\StaqSDK\Scripts\Staq.cs" Line="21" Column="40" />
-      <File FileName="Assets\StaqSDK\Scripts\StaqRest.cs" Line="1" Column="1" />
+      <File FileName="Assets\StaqSDK\Scripts\Staq.cs" Line="4" Column="34" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\StaqRest.cs" line="128" />
-      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\Staq.cs" line="74" />
-      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\Staq.cs" line="30" />
-      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\Staq.cs" line="53" />
-      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\StaqRest.cs" line="334" />
-      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\StaqRest.cs" line="328" />
-      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\StaqRest.cs" line="139" />
-      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\Staq.cs" line="60" />
-      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\StaqRest.cs" line="63" />
-      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\StaqRest.cs" line="105" />
-      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\StaqRest.cs" line="12" />
-      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\Staq.cs" line="43" />
-      <Breakpoint file="C:\Users\Massimo\Documents\GitHub\staq-unity\StaqUnitySDK\Assets\StaqSDK\Scripts\StaqRest.cs" line="31" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

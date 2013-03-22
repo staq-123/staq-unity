@@ -3,22 +3,12 @@ using System.Collections;
 
 public class Staq : MonoBehaviour
 {
-	static Staq()
-	{
-		Debug.Log("Test!");
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-	
 	/// <summary>
 	/// The current instance of the client.
 	/// </summary>
 	static Staq defaultInstance;
 	
-	public string GameId = "app_uqtmpfcbys";
+	public string GameId = "AppId";
 	public bool Connected = false;
 	public bool EnforceIapOnError = false;
 	
@@ -73,6 +63,7 @@ public class Staq : MonoBehaviour
 	
 		staqRestClient = new StaqRest(GameId, StaqDeviceInfo.CreateUid(), this);
 		StartCoroutine(staqRestClient.StartPosting());
+		staqRestClient.AppendSessionStart();
 		
 		//Start the submit queue for sending messages to the server
 		/*if (!CustomUserID && StaqGenericInfo.UserID != string.Empty)
@@ -87,9 +78,8 @@ public class Staq : MonoBehaviour
 	
     void OnApplicationQuit()
     {
-
         // app quits
-
+		staqRestClient.AppendSessionEnd();
     }
 	
 	public static void OverrideUserId(string userId)
@@ -107,7 +97,7 @@ public class Staq : MonoBehaviour
 		defaultInstance.staqRestClient.AppendIap(platform, receipt, itemId, price);
 	}
 	
-	public static void SessionStart()
+	/*public static void SessionStart()
 	{
 		defaultInstance.staqRestClient.AppendSessionStart();
 	}
@@ -115,5 +105,5 @@ public class Staq : MonoBehaviour
 	public static void SessionEnd()
 	{
 		defaultInstance.staqRestClient.AppendSessionEnd();
-	}
+	}*/
 }

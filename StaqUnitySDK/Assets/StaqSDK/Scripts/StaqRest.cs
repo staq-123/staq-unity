@@ -21,7 +21,7 @@ public class StaqRest {
 	MonoBehaviour behaviour;
 	Queue<EventModel> eventQueue = new Queue<EventModel>();
 	
-	static float postIntervalSeconds = .5F;
+	static float postIntervalSeconds = 5;
 	const int MAX_FILE_SIZE = 2 * 1024 * 1024;
 	
 	string currentSession = Guid.NewGuid().ToString();
@@ -37,7 +37,7 @@ public class StaqRest {
 				if (uid == null || authToken == null)
 					yield return behaviour.StartCoroutine(Auth(udid)); // TODO: pass the right appId and UDID
 				
-				StaqUtilities.Log("Posting data...");
+				StaqUtilities.Log("Posting events...");
 				
 				// submit data
 				yield return behaviour.StartCoroutine(PostEvents());
@@ -50,6 +50,7 @@ public class StaqRest {
 				// if offline log to storage
 				var sessionData = GetRequestContents(events);
 				
+				StaqUtilities.Log("Saving events to local storage...");
 				SaveToDisk(sessionData);
 			}
 			
@@ -77,7 +78,7 @@ public class StaqRest {
 			writeQueue.Enqueue(ev);
 		
 		string current;
-		while ((current = writeQueue.Dequeue ()) != null)
+		while (writeQueue.Count > 0 && (current = writeQueue.Dequeue ()) != null)
 		{
 			var www = PostWWW(StaqUtilities.FormatStaqUrl(gameId, uid), current, authToken);
 			yield return www;
@@ -139,7 +140,7 @@ public class StaqRest {
 		var parsedResponse = StaqLitJson.JsonMapper.ToObject(www.text);
 		
 		uid = (string)parsedResponse["uid"];
-		authToken = (string)parsedResponse["authtoken"];
+		authToken = (string)parsedResponse["token"];
 		currentSession = (string)parsedResponse["sid"];
 		StaqUtilities.Log("Auth: " + uid);
 	}
@@ -173,11 +174,11 @@ public class StaqRest {
 	
 	public void AppendSessionEnd()
 	{
-		StaqUtilities.Log("Session end.");
 		if (currentSession == null)
 			return;
 		
 		var sessionLength = (currentSessionStart - DateTime.UtcNow).TotalSeconds;
+		StaqUtilities.Log(string.Format("Session end. {0}", Math.Round(sessionLength)));
 		
 		AppendEvent("SESSION_END", sessionLength, null);
 		
