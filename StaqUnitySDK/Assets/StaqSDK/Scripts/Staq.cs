@@ -62,7 +62,7 @@ public class Staq : MonoBehaviour
 		}*/
 	
 		staqRestClient = new StaqRest(GameId, StaqDeviceInfo.CreateUid(), this);
-		StartCoroutine(staqRestClient.StartPosting());
+		StartCoroutine(staqRestClient.EventSubmitLoop());
 		staqRestClient.AppendSessionStart();
 		
 		//Start the submit queue for sending messages to the server
@@ -79,7 +79,7 @@ public class Staq : MonoBehaviour
     void OnApplicationQuit()
     {
         // app quits
-		staqRestClient.AppendSessionEnd();
+		staqRestClient.Quit();
     }
 	
 	public static void OverrideUserId(string userId)

@@ -20,6 +20,7 @@ public class StaqRest {
 	string authToken;
 	MonoBehaviour behaviour;
 	Queue<EventModel> eventQueue = new Queue<EventModel>();
+	bool isExiting = false;
 	
 	static float postIntervalSeconds = 5;
 	const int MAX_FILE_SIZE = 2 * 1024 * 1024;
@@ -27,35 +28,48 @@ public class StaqRest {
 	string currentSession = Guid.NewGuid().ToString();
 	DateTime currentSessionStart = DateTime.MinValue;
 	
-	public IEnumerator StartPosting()
+	public void Quit()
 	{
-		while (true) // TODO: check whether we should keep posting events
+		isExiting = true;
+		
+		AppendSessionEnd();
+		behaviour.StartCoroutine(EventSubmit());
+	}
+	
+	public IEnumerator EventSubmitLoop()
+	{
+		while (!isExiting) // TODO: check whether we should keep posting events
 		{
-			if (StaqUtilities.IsConnected())
-			{
-				// if not authenticated do auth
-				if (uid == null || authToken == null)
-					yield return behaviour.StartCoroutine(Auth(udid)); // TODO: pass the right appId and UDID
-				
-				StaqUtilities.Log("Posting events...");
-				
-				// submit data
-				yield return behaviour.StartCoroutine(PostEvents());
-			}
-			else
-			{
-				var events = eventQueue.ToArray();
-				eventQueue.Clear();
-				
-				// if offline log to storage
-				var sessionData = GetRequestContents(events);
-				
-				StaqUtilities.Log("Saving events to local storage...");
-				SaveToDisk(sessionData);
-			}
+			yield return behaviour.StartCoroutine(EventSubmit());
 			
 			// wait timer
 			yield return new WaitForSeconds(postIntervalSeconds);
+		}
+	}
+	
+	IEnumerator EventSubmit()
+	{
+		if (StaqUtilities.IsConnected())
+		{
+			// if not authenticated do auth
+			if (uid == null || authToken == null)
+				yield return behaviour.StartCoroutine(Auth(udid)); // TODO: pass the right appId and UDID
+			
+			StaqUtilities.Log("Posting events...");
+			
+			// submit data
+			yield return behaviour.StartCoroutine(PostEvents());
+		}
+		else
+		{
+			var events = eventQueue.ToArray();
+			eventQueue.Clear();
+			
+			// if offline log to storage
+			var sessionData = GetRequestContents(events);
+			
+			StaqUtilities.Log("Saving events to local storage...");
+			SaveToDisk(sessionData);
 		}
 	}
 	
@@ -65,8 +79,13 @@ public class StaqRest {
 		
 		// read old events from file
 		var oldEvents = ReadFromDisk().ToArray();
+		if (oldEvents.Length == 0 && eventQueue.Count == 0)
+		{
+			StaqUtilities.Log("No events to submit.");
+			yield break;
+		}
 		
-		var writeQueue = new Queue<string>(oldEvents);
+		var writeQueue = new Queue<string>(/*oldEvents*/);
 		
 		// get new events from the queue
 		var newEvents = GetRequestContents(eventQueue.ToArray());
@@ -80,7 +99,9 @@ public class StaqRest {
 		string current;
 		while (writeQueue.Count > 0 && (current = writeQueue.Dequeue ()) != null)
 		{
-			var www = PostWWW(StaqUtilities.FormatStaqUrl(gameId, uid), current, authToken);
+			var url = StaqUtilities.FormatStaqUrl(gameId, uid) + "events";
+			
+			var www = PostWWW(url, current, authToken);
 			yield return www;
 			
 			if (!StaqUtilities.IsResponseValid(www))
@@ -103,14 +124,14 @@ public class StaqRest {
 	
 	IEnumerable<string> GetRequestContents(EventModel[] events)
 	{
-		var bySession = eventQueue.GroupBy(ev => ev.sid).ToArray();
+		var bySession = events.GroupBy(ev => ev.sid).ToArray();
 		var request = bySession.Select(session => new
 		{
 			sid = session.Key,
 			events = session.Select(ev => new
 			{
 				ev.@event,
-				ev.timestamp,
+				timestamp = ev.timestamp.ToString("s", System.Globalization.CultureInfo.InvariantCulture) + "Z",
 				ev.value,
 				ev.metadata
 			}).ToArray()
@@ -209,11 +230,11 @@ public class StaqRest {
 		public object metadata { get; set; }
 	}
 	
-	public bool VerifyReceipt(string receipt)
+	/*public bool VerifyReceipt(string receipt)
 	{
 		var www = new WWW("http://api.com");
   
-        /*  client.Headers.Add("Content-Type", "application/json");
+        	client.Headers.Add("Content-Type", "application/json");
             client.Headers.Add("Auth-Token", token);
 
             var url = string.Format("http://api.staq.io/v1/apps/" + app + "/users/{0}/iap/apple", uid);
@@ -228,7 +249,7 @@ public class StaqRest {
             var body = JsonConvert.SerializeObject(content, jsonSettings);
             var resp = UploadString(client, url, body);
             return (bool)((dynamic)JObject.Parse(resp)).isValid;
-		*/
+
 		while (!www.isDone)
 		{
 			behaviour.StartCoroutine(StaqUtilities.Sleep(200));
@@ -236,7 +257,7 @@ public class StaqRest {
 		}
 		
 		return true;
-	}
+	}*/
 	
 	static IEnumerable<string> ReadFromDisk()
 	{

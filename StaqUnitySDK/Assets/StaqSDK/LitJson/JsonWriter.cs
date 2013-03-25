@@ -365,7 +365,6 @@ namespace StaqLitJson
             context.ExpectingValue = false;
         }
 
-        [CLSCompliant(false)]
         public void Write (ulong number)
         {
             DoValidation (Condition.Value);

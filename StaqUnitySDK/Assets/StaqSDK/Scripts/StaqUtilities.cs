@@ -41,7 +41,7 @@ public static class StaqUtilities
 	
 	public static string FormatStaqUrl(string appId, string userId)
 	{
-		string staqBaseUrl = "http://staqapi.cloudapp.net/v1/";
+		string staqBaseUrl = "http://api.staq.io/v1/";
 		
 		if (userId != null)
 			return string.Format("{0}apps/{1}/users/{2}/", staqBaseUrl, appId, userId);
